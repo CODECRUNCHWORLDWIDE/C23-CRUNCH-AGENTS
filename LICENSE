@@ -1,0 +1,30 @@
+C23 Crunch Agents — AI Agent Systems Engineering
+Curriculum, lecture notes, exercises, challenges, quizzes, mini-projects,
+and the capstone specification.
+
+Copyright (C) 2026 Code Crunch Club curriculum council
+and the contributors named in CONTRIBUTORS.md (where present).
+
+This curriculum is free educational material: you may redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This curriculum is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this curriculum. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
+
+The canonical full text of GPL-3.0 is maintained at the academy root in
+the master curriculum repository. This file is a short pointer; the
+license that applies to this track is the unmodified GNU General Public
+License, version 3, dated 29 June 2007.
+
+For attribution, please cite as:
+
+  Code Crunch Club. (2026). C23 — Crunch Agents:
+  AI Agent Systems Engineering. GPL-3.0.
+  https://github.com/CODE-CRUNCH-CLUB/C23-CRUNCH-AGENTS
