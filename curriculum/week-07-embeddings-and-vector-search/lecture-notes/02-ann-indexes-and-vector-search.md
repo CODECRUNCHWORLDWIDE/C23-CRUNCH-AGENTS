@@ -269,7 +269,42 @@ That last branch is the week's humility lesson, and it's why the next two weeks 
 
 ---
 
-## 5. Recap
+## 5. Filtered ANN: the metadata problem you'll hit immediately
+
+Pure k-NN answers "what are the nearest vectors?" Real products almost never ask that. They ask "what are the nearest vectors *belonging to this user* / *in this date range* / *with status = active*?" That extra predicate is a **metadata filter**, and combining it with ANN is where naive implementations fall over.
+
+There are two ways to filter, and the difference is the whole lesson:
+
+**Pre-filter (filter, then search).** Apply the `WHERE` clause first, then run k-NN over only the surviving rows. Correct, but it can defeat the index: an HNSW graph is built over *all* vectors, and if your filter removes 99% of them, the graph's navigation walks through deleted-out neighbors and may return fewer than `k` results — or fall back to a slow scan.
+
+**Post-filter (search, then filter).** Run k-NN over everything, then drop rows that fail the predicate. Fast, but *wrong at the boundary*: if you ask for the top 10 and 9 of the nearest 10 fail the filter, you return 1 result when 10 valid ones existed just outside the ANN window.
+
+pgvector's pragmatic answer is **over-fetch then filter**, plus a partial index where the filter is low-cardinality:
+
+```sql
+-- Over-fetch: ask for more than you need, filter, then trim. Tune the multiplier.
+SELECT doc_id, content
+FROM chunks
+WHERE tenant_id = %(tenant)s          -- the metadata predicate
+ORDER BY embedding <=> %(qvec)s
+LIMIT 50;                              -- over-fetch; the app keeps the top 5 that matter
+```
+
+```sql
+-- For a hot, low-cardinality filter, a PARTIAL index keeps ANN fast within the slice:
+CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops)
+WHERE tenant_id = 'acme';
+```
+
+The senior move is to **add the filtered query to your gold set**. A model and index that score well on unfiltered Recall@5 can fall apart once a tenant filter shrinks the candidate pool — because the ANN window now competes with the predicate. This is also why purpose-built stores like **Qdrant** (week 10) lead with "filtered ANN" as a headline feature: they integrate the filter into graph traversal instead of bolting it on. For this course, pgvector's over-fetch pattern is enough — but you must know *why* "just add a WHERE clause" silently degrades recall, because it's the first thing that bites when your single-tenant demo becomes a multi-tenant product.
+
+### A note on IVFFlat vs HNSW for the filtered case
+
+pgvector ships two index types, and the filter problem is where their characters diverge. **IVFFlat** partitions vectors into `lists` clusters and probes `nprobe` of them at query time; it builds fast and uses less memory than HNSW, but its recall is more sensitive to data distribution and it degrades harder under a selective filter (a filter can empty most of the probed lists). **HNSW** builds slower and uses more memory but gives better recall at a given latency and tolerates filters better. The 2026 default is HNSW for almost everything; reach for IVFFlat only when build time or memory is the binding constraint and you've measured that its recall is acceptable on *your* filtered gold set. Either way, the index type is one more thing you choose by measuring, not by reputation — and the measurement is the same `evaluate()` you'll build in the mini-project, run once per index configuration.
+
+---
+
+## 6. Recap
 
 You should now be able to:
 

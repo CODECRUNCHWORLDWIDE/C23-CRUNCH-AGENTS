@@ -157,7 +157,67 @@ Reading a vendor's ToS is the closed-weights version of reading an open license.
 
 ---
 
-## 6. A worked selection, end to end
+## 6. The closed frontier model as a system component
+
+We have treated the open-weights side in depth because the course leans open. But most teams *also* call a frontier vendor API, and a senior engineer reads that API as a component with the same discipline they apply to a database driver. Let's make the vendor surface concrete using the one you call in this week's lab — the Anthropic Messages API — because the shape generalizes to every frontier vendor.
+
+### The request is a function call with a billing meter
+
+A vendor API call is the `tokens → logits → sampled tokens` function from Lecture 1, wrapped in HTTP, authentication, and a price meter. The minimal call is three required fields:
+
+```python
+import anthropic
+
+client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
+
+response = client.messages.create(
+    model="claude-sonnet-4-6",          # which function (capability tier)
+    max_tokens=1024,                    # the hard ceiling on the decode loop
+    messages=[{"role": "user", "content": "Summarize the CAP theorem in two sentences."}],
+)
+
+# response.content is a list of typed blocks; the text lives in the text blocks
+text = next(b.text for b in response.content if b.type == "text")
+print(text)
+print(response.usage.input_tokens, response.usage.output_tokens)
+```
+
+Three things on this call are worth a systems engineer's full attention:
+
+- **`model`** selects the capability tier — and therefore the price, the latency profile, and the context ceiling. It is the single most consequential parameter, and the whole of §1–§5 is about choosing it. The current Anthropic tiers are `claude-opus-4-8` (frontier), `claude-sonnet-4-6` (balanced), and `claude-haiku-4-5` (fast/cheap); the IDs are exact strings with no date suffix.
+- **`max_tokens`** is the enforced ceiling on the decode phase (Lecture 1 §4). It is *not* a target; it is a cap. Set it too low and the model stops mid-sentence with `stop_reason == "max_tokens"` — a truncation bug that looks like a model failure but is a configuration failure in your wrapper. Set it generously for streaming workloads and tightly for classification where you know the output is one word.
+- **`response.usage`** is the billing meter. `input_tokens` and `output_tokens` are the *measured* token counts the vendor charges you for — the ground truth your cost estimates must reconcile against. This is the number `llmpick` reports; it is the number a budget owner trusts.
+
+### The four constraints, on the vendor side
+
+The same four dimensions from §4 reappear, sourced slightly differently:
+
+- **Capability** — pick the tier, then *measure on your task*. The vendor's marketing benchmark is a shortlisting signal, never the decision (§3).
+- **Cost** — token price × measured tokens. For Anthropic in 2026, the published rates are roughly Opus $5/$25 per million input/output tokens, Sonnet $3/$15, Haiku $1/$5. The 5× spread between Haiku and Opus is exactly why routing (week 21) exists: pay the Opus price only on the queries that need it.
+- **Latency** — TTFT and TPOT (Lecture 1 §4), measured under realistic prompt sizes. A vendor's median latency on a one-liner tells you nothing about your 10k-token RAG prompt.
+- **Data handling and limits** — the closed-weights analog of the open license (§5). Read the data-retention terms, the training-on-inputs policy (enterprise tiers typically guarantee no training on your inputs), the rate limits (requests-per-minute and tokens-per-minute), and the regional availability. These are hard constraints that shape your architecture as surely as a license clause.
+
+### Token counting before you spend
+
+You can ask the vendor exactly how many input tokens a request will cost *before* you send it — using the model's own tokenizer, server-side, for free:
+
+```python
+count = client.messages.count_tokens(
+    model="claude-sonnet-4-6",
+    messages=[{"role": "user", "content": long_document}],
+)
+estimated_input_cost = count.input_tokens * 3.00 / 1_000_000   # $3/M for Sonnet input
+```
+
+This is the correct way to estimate cost for a hosted model — not `len(text.split())`, not a character count, not `tiktoken` (which is OpenAI's tokenizer and undercounts non-OpenAI models). Week 2 makes tokenization the whole subject; for now, internalize the rule: **estimate with the model's own tokenizer, every time.** Using the wrong tokenizer is a systematic error that biases your budget in the same direction on every request.
+
+### Why this section is here
+
+The point is not "memorize the Anthropic SDK." The point is that a frontier API is *a component*, and you onboard it the way you onboard any component: read its contract (the request/response shape), find its meter (`usage`), find its limits (rate limits, max context, data terms), and measure its behavior on your traffic. Swap "Anthropic" for any vendor and the discipline is identical — which is exactly why this week's uniform client (`exercise-02`) hides the vendor behind one `complete()` interface. The course is the engineering, not the import.
+
+---
+
+## 7. A worked selection, end to end
 
 Let's pick a model for a concrete job, showing the reasoning a reviewer would expect.
 
@@ -177,7 +237,35 @@ This is the reasoning your challenge memo (`challenge-01`) and your `llmpick` to
 
 ---
 
-## 7. Recap
+## 7b. Reading the eval section like an engineer, not a fan
+
+We listed "eval methodology and caveats" as the sixth load-bearing fact (§3) and then moved on quickly. It earns more than a line, because the eval section is where the most expensive mistakes hide — a model picked on a contaminated benchmark fails in production, and the failure is silent until a user finds the edge case. Here is how a senior engineer reads it.
+
+### Four questions to ask of any reported benchmark
+
+1. **Zero-shot or few-shot?** A "few-shot" number means the model was shown several worked examples *in the prompt* before being tested. That inflates the score relative to how the model behaves on your zero-shot production call. If your product doesn't supply few-shot examples, a few-shot benchmark is measuring a different system than the one you'll ship.
+2. **Was the test set decontaminated?** If the benchmark's questions (or near-duplicates) appeared in the training data, the model is partly *recalling*, not *reasoning*, and the score is inflated. Good cards describe their decontamination procedure. The *absence* of any decontamination statement is itself a yellow flag — it doesn't prove contamination, but it means you can't rule it out.
+3. **What's the metric, exactly?** "Accuracy" on a multiple-choice benchmark is a different animal from exact-match on free-form generation, which is different again from a human-preference Elo. A model can top one and trail another. Match the metric to *your* task: if you do extraction, a free-form exact-match number predicts you better than a multiple-choice accuracy.
+4. **Who ran the eval?** A vendor reporting its own model's score on a benchmark it chose is not lying, but it is selecting. Independent third-party evaluations (Artificial Analysis, public reproductions) are worth more than the headline on the launch blog — not because vendors cheat, but because they naturally foreground their wins.
+
+### The honest move: a held-out eval you own
+
+The conclusion of all four questions is the same, and it is the course's central discipline: **the only benchmark that predicts your production performance is the one you run on your own held-out data with your own metric.** The card's eval narrows the field; your eval makes the decision. This is not perfectionism — it is the difference between "the leaderboard said it was good" and "I measured 94% on our 200 labeled tickets, here's the confusion matrix." One of those survives an architecture review. This is exactly why the mini-project measures candidates on the *actual prompt* rather than trusting any external number, and why the rubric's measurement axis fails vibes-only submissions.
+
+---
+
+## 7c. Modalities and sizes as a selection axis
+
+The fifth card fact — modalities and sizes — quietly decides more than beginners expect. Two notes worth carrying.
+
+- **Modality is a hard gate, not a nice-to-have.** If your task involves an image, a PDF page with a figure, or audio, a text-only model cannot do it *at any capability tier*. You filter to vision-capable (or audio-capable) models *first*, then apply the capability/cost reasoning within that filtered set. Getting this order wrong — picking on capability, then discovering the model can't see images — is a re-architecture you find out about late. The frontier tiers (`claude-opus-4-8`, `claude-sonnet-4-6`) and several open families (Qwen-VL, Llama 4's multimodal variants) are vision-capable; you confirm per checkpoint, because within a family the text-only and multimodal variants are *different models with different IDs*.
+- **Size determines where it can run, which loops back to the open/closed axis (§1).** A 3B open model runs on a laptop CPU; a 70B needs a serious GPU; a frontier closed model runs only on the vendor's infrastructure. Size therefore isn't just a capability proxy — it's a *deployment* constraint. The reason week 6 has you bring up a 7B locally is that the 7B is the sweet spot where "runs on hardware you can afford" meets "capable enough for real work" — which is the entire premise of the local-inference and routing strategy the course is built around.
+
+The takeaway: when you onboard a model, read modality as a gate you apply before anything else, and read size as a deployment constraint that ties back to whether you can self-host. Both are on the card; both are load-bearing.
+
+---
+
+## 8. Recap
 
 You should now be able to:
 
@@ -185,9 +273,47 @@ You should now be able to:
 - Give the one-line characterization of the major 2026 open families (Llama 4, Qwen 3, Mistral, Gemma 3, DeepSeek) and the frontier closed tiers (Claude 4 / GPT-5 / Gemini 2.5 class).
 - Extract the six load-bearing facts from a model card (license, context window, cutoff, intended/out-of-scope use, modalities/sizes, eval caveats) and explain why a leaderboard rank is not product fit.
 - Read a license in ten minutes with the Ctrl-F checklist, sort it into true-open / source-available / research-only, and find the clauses (commercial, MAU, derivative, distribute, prohibited use) that decide whether you can ship.
+- Read a closed frontier API as a system component: its request/response contract, its `usage` billing meter, its `max_tokens` ceiling, its rate limits and data-handling terms, and how to count tokens with the model's own tokenizer before you spend.
 - Produce a defensible model selection that is driven by the task's constraints and backed by measured numbers — not by a leaderboard.
 
 Next: the exercises put this into your hands — read three real cards, build the uniform client, and measure prefill vs decode yourself. Continue to [the exercises](../exercises/README.md).
+
+---
+
+## 9. Questions a reviewer will actually ask
+
+In an architecture review or an interview, the model-selection conversation tends to converge on the same handful of questions. Rehearse the answers now; they are the operational form of this lecture.
+
+**"Why this model and not the one that's #1 on the leaderboard?"**
+Because the leaderboard measures the average over a benchmark distribution, and my product is one point in it. I shortlisted from the landscape, then measured the candidates on my own held-out task with my own metric, and *this* one met my binding constraint (name it: cost / latency / correctness / data-handling) at acceptable quality. The leaderboard narrowed the field; the measurement made the call.
+
+**"Can we legally ship on this?"**
+For the open model: I read the license, it's [Apache-2.0 / community / research-only], and here's the clause that matters for us (commercial use permitted; the MAU threshold is irrelevant at our scale; attribution obligation noted). For the closed model: outputs are commercially usable under the vendor's terms, our enterprise tier guarantees no training on our inputs, and the data-residency story matches our requirements.
+
+**"What happens when this model is deprecated?"**
+We change a string. The uniform client hides every provider behind one `complete()` interface, so swapping models is a config change, not a re-architecture. That's the whole reason the abstraction exists.
+
+**"How do you know your cost estimate is right?"**
+I count tokens with the model's own tokenizer — `count_tokens` for the hosted model, the actual tokenizer for the local one — never a word-count or `tiktoken` on a non-OpenAI model. Then I reconcile the estimate against the `usage` the vendor actually billed. The estimate and the meter agree, or I find out why.
+
+**"This works in the demo — will it hold at production volume?"**
+The per-call cost and latency I measured multiply out: [measured cost] × [calls/day] × 30 is the monthly number, and that's where a 5× tier difference becomes visible. A demo runs at a volume where every model looks free; production is where the binding constraint bites. That gap is exactly what the routing lab in week 21 addresses.
+
+If you can answer these five without reaching for a leaderboard, you have the skill this lecture set out to build. Everything else this week — the card-reading exercise, the uniform client, the `llmpick` mini-project — is rehearsal for this conversation.
+
+---
+
+## 10. A closing note on reversibility
+
+One last lens that organizes the whole lecture: **which of these decisions are easy to reverse, and which are not?** A senior engineer spends their care budget on the irreversible ones.
+
+- **Picking a specific model is reversible.** Behind the uniform client, swapping `claude-sonnet-4-6` for `qwen2.5:7b` is a config change. Don't agonize; measure and move. If you're wrong, you change a string next week.
+- **Picking the open-vs-closed *posture* is harder to reverse.** Committing to "we self-host everything" means hiring for GPU ops, standing up serving infrastructure, and owning the on-call (the whole back half of this course). Committing to "we're vendor-only" means accepting per-token cost at scale and a dependency you can't operate without. You *can* change posture, but it's a quarter of work, not an afternoon.
+- **Picking a model whose license you didn't read is the one that bites.** Building a product on a research-only checkpoint, or blowing past an MAU threshold you never noticed, is the decision you discover is wrong at the worst possible time — after you've shipped. This is irreversible in the sense that matters: you can't un-ship, and the remediation is a forced migration under pressure.
+
+So the priority order for your care is the inverse of how much code each decision touches: **read the license most carefully** (cheapest to check, most expensive to get wrong), **choose the open/closed posture deliberately** (it shapes your whole org), and **treat the specific model as a measured, swappable detail** (the thing the uniform client is built to make cheap). Get those three in the right order and you will not be the engineer explaining to legal why the demo can't ship.
+
+This reversibility lens is also why the course is sequenced the way it is. We make you build the swappable abstraction first (this week's uniform client), so that every later decision — which embedding, which vector store, which serving stack — inherits the same property: measured, swappable, reversible. The architecture's job is to push as many decisions as possible from the irreversible column into the reversible one. A model choice that would have been a load-bearing commitment becomes a one-line config because you built the seam. That is the difference between a system you can evolve and one you have to rewrite, and it is the habit the next twenty-three weeks reinforce relentlessly.
 
 ---
 
@@ -200,3 +326,6 @@ Next: the exercises put this into your hands — read three real cards, build th
 - *Anthropic Messages API — Models overview* (current frontier model IDs, context, pricing): <https://docs.claude.com/en/docs/about-claude/models/overview>
 - *Artificial Analysis — models comparison* (cost/latency/quality cross-section): <https://artificialanalysis.ai/models>
 - *LMArena leaderboard* (human-preference Elo, read skeptically): <https://lmarena.ai/leaderboard>
+- *Anthropic — Token counting* (count tokens with the model's own tokenizer, before you spend): <https://docs.claude.com/en/docs/build-with-claude/token-counting>
+- *Anthropic — Pricing* (the per-tier input/output token rates the cost math in §6 uses): <https://docs.claude.com/en/docs/about-claude/pricing>
+- *Mistral models & licenses* (the cleanest Apache-2.0 open-weights story): <https://docs.mistral.ai/getting-started/models/>

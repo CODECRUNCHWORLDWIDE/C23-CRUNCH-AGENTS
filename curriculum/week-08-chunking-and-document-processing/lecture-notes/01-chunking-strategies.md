@@ -97,6 +97,16 @@ Overlap is the cheapest insurance against the boundary problem, and it's why alm
 
 > **Rule of thumb:** start at 10–15% overlap. If your gold-set answers are short and self-contained (legal clauses), modest overlap is plenty. If answers span several sentences (prose, narrative), more overlap helps — measure it.
 
+A worked boundary, to make the mechanism concrete. Suppose the token stream around clause 9 is, with token positions marked:
+
+```
+... [500] protected [501] for [502] five [503] years [504] after [505] termination ...
+```
+
+A *fixed* 512-window that happens to break at token 502 puts "...protected for" in chunk A and "five years after termination" in chunk B. Neither chunk contains the whole answer "five years after termination"; a query about confidentiality duration matches chunk B's "five years after termination" only partially, and the *clause's framing* ("must be protected") is gone. Now add 64 tokens of overlap: chunk B starts at token 502 − 64 = 438, so it *includes* "...must be protected for five years after termination" in full. The straddle is healed. That's the whole value of overlap, in one example: it's a second copy of the boundary region, shifted, so the answer that fell in the crack of one window sits comfortably inside the next.
+
+The duplicate-hit cost is the flip side of the same coin: because the boundary text now lives in two chunks, a query that matches it retrieves *both*, and your top-5 can contain two near-identical results — which is wasted slots and, downstream, redundant context in the generator's prompt. In the A/B harness you'll de-duplicate hits by source clause before scoring, precisely so overlap's duplicate chunks don't inflate (or deflate) the metric. Overlap is a real lever with a real cost; you tune it, you don't max it.
+
 ---
 
 ## 4. Recursive chunking — respect structure where it exists
@@ -262,6 +272,19 @@ The peak is **corpus-dependent**. There is no universal best chunk size:
 This is why the syllabus deliverable is an **A/B memo** and not a recommendation to "use 512." You *measure* your corpus. The sweep in Exercise 3 and the A/B in the challenge are that measurement: same embedding (BGE-large), same store (pgvector), vary the chunk size and the strategy, read the Recall@5 and MRR, and pick a winner *with the numbers that justify it*. A chunk size you can't defend with a curve is a chunk size you guessed.
 
 > **The discipline:** never report a chunk size without the sweep that produced it. "512 with 64 overlap, recursive" is an answer. "512 because it's standard" is a confession.
+
+How the sweep actually runs — and why it's cheap enough that there's no excuse to skip it. You already built the machinery in week 7: a fixed embedding, a fixed store, and a pure `evaluate(gold, retrieve_fn, k)`. The sweep is a `for` loop around that:
+
+```python
+for size in (128, 256, 512, 1024):
+    retrieve_fn = build_retriever(chunk_at=size)   # chunk -> embed -> index -> retrieve
+    metrics = evaluate(gold, retrieve_fn, k=5)      # week-7's evaluate, UNCHANGED
+    print(size, metrics["Recall@k"], metrics["MRR"])
+```
+
+That's it. Each iteration re-chunks the corpus at one size, embeds the chunks (the only real cost), indexes them, and scores against the *same* gold set. On the 50-clause legal corpus that's seconds per size on CPU; on a real corpus it's minutes. Either way it's a one-time cost that buys you a defensible number for a decision you'll live with for the life of the index. The output is the curve, and the curve names the size. Exercise 3 is exactly this loop; the mini-project A/B is this loop with the *strategy* swept too, not just the size.
+
+One more subtlety the sweep exposes: **size and strategy interact.** Fixed-window at 256 and recursive at 256 are not the same chunk set — recursive snaps to paragraph boundaries, fixed cuts at token 256 regardless. So you don't sweep size *then* pick a strategy; you sweep both together (the A/B), because the best size for fixed may not be the best size for recursive. The mini-project's table has a row per (strategy, size) pair for exactly this reason. Treat "chunk size" and "chunk strategy" as one joint hyperparameter, tuned together against the metric.
 
 ---
 

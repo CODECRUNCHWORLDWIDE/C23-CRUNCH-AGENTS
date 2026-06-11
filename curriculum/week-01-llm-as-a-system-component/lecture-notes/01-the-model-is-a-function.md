@@ -292,6 +292,24 @@ Run it. You will see two different latencies, two different token counts (differ
 
 ---
 
+## 6b. Five confusions the function model dissolves
+
+The "model is a function, everything else is the wrapper" frame is not just tidy — it resolves five confusions that cost beginners real debugging time. Each one is a wrapper bug masquerading as a model mystery.
+
+1. **"The model contradicted itself between two messages."** The model has no memory across calls; it is stateless (§1). Whatever "self" exists between turns is the conversation history *your code* re-sends. A contradiction is almost always a history-assembly bug — you dropped a turn, truncated the wrong end, or re-ordered messages — not the model "changing its mind." Inspect the exact `messages` array you sent before you blame the weights.
+
+2. **"It used to give the right answer and now it doesn't."** At temperature > 0 the sampler (Stage 4) draws from a distribution; the *same* prompt can yield different tokens on different calls. The model didn't regress; your sampler rolled a different draw. If you need reproducibility for a test, that's a sampling-configuration decision (lower temperature, or in week 2's terms, a tighter truncation), made in your wrapper.
+
+3. **"It can't do basic arithmetic / can't count letters."** The tokenizer (Stage 1) presents text as sub-word pieces, not digits or characters. The model never sees "the third letter"; it sees tokens. Letter- and digit-level tasks are hard *by construction* of the interface, and the fix is to give it a tool (a calculator, code execution — week 4+), not to prompt harder.
+
+4. **"It doesn't know something that happened last month."** Parametric knowledge is frozen in the MLP weights at the training cutoff (§3). "It doesn't know" is the default state for anything past the cutoff, by design. The fix is to put the fact in the context window (retrieval — Phase II), not to re-ask. A model "not knowing" current events is working as specified.
+
+5. **"The first response is slow but the rest stream fine."** Prefill (compute-bound) sets time-to-first-token and scales with prompt length; decode (bandwidth-bound) sets time-per-output-token and is roughly prompt-length-independent (§4). A slow start on a long prompt with normal streaming after is the *expected* shape, not a bug. If you measured a single "latency" number, you conflated two different things.
+
+Notice the pattern: in every case, naming the stage that owns the behavior tells you where the bug lives and what the fix is. That is the entire payoff of the function model — it turns "the AI is being weird" into "the history assembly dropped turn 3," which is a bug you can fix.
+
+---
+
 ## 7. Recap
 
 You should now be able to:

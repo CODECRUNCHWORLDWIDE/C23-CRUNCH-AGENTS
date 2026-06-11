@@ -146,6 +146,36 @@ Run it and read the results against §1:
 
 That last bullet is the entire argument for hybrid search. BM25 and dense fail on *opposite* queries. So you run both.
 
+### 2.5 A worked BM25 score, by hand
+
+To make `k1`, `b`, and IDF concrete, score one document for one query the long way. Take the corpus above (8 clauses, `N = 8`) and the query `"liability insurance"` against `clause_12` ("The Contractor shall maintain professional liability insurance of $1,000,000."). The query terms are `liability` and `insurance`.
+
+First, IDF. Count how many of the 8 clauses contain each term:
+
+- `liability` appears in `clause_12` and `clause_22` ("Neither party shall be **liable**..." — *not* a match unless you stem; assume the exact token `liability` appears only in `clause_12`), so `n(liability) = 1`.
+- `insurance` appears only in `clause_12`, so `n(insurance) = 1`.
+
+Both are rare (1 of 8), so both get a large IDF:
+
+```
+idf(liability) = ln((8 - 1 + 0.5) / (1 + 0.5) + 1) = ln(7.5/1.5 + 1) = ln(6) ≈ 1.79
+idf(insurance) = ln((8 - 1 + 0.5) / (1 + 0.5) + 1) = ln(6) ≈ 1.79
+```
+
+Now the saturating TF term. Each query term appears **once** in `clause_12` (`f = 1`). The clauses are short and roughly average length, so `|d| / avgdl ≈ 1`, which makes the length factor `(1 - b + b·1) = 1` regardless of `b` (this is *why* `b` barely matters on a uniform corpus). With `k1 = 1.5`:
+
+```
+tf_component = f·(k1 + 1) / (f + k1·1) = 1·2.5 / (1 + 1.5) = 2.5 / 2.5 = 1.0
+```
+
+So each term contributes `idf × tf_component = 1.79 × 1.0 ≈ 1.79`, and the document's BM25 score for the query is the sum over query terms:
+
+```
+BM25("liability insurance", clause_12) ≈ 1.79 + 1.79 = 3.58
+```
+
+Two things to take from this. First, the score is **large precisely because the terms are rare** — IDF did the work, which is exactly why BM25 nails the niche-term queries dense retrieval fumbles. Second, notice that `k1` and `b` made almost no difference here: TF was 1 (no repetition to saturate) and the document was average-length (nothing to normalize). On *this* corpus the BM25 parameters are nearly inert, and the defaults are fine — a real result you'll confirm empirically in Exercise 1, and a reminder that the parameters earn their keep only on long, length-varying documents where terms repeat.
+
 ---
 
 ## 3. Hybrid search: run both, then combine
@@ -230,6 +260,16 @@ Three things to never get wrong, because they're the bugs we see every cohort:
 
 > **The mantra for §3:** *Fuse on rank, not on score. RRF with k=60 is the robust default; reach for weighted score fusion only when you have a calibrated reason and a held-out set to tune it on — which, at the legal-corpus scale, you don't.*
 
+### 3.5 How deep to retrieve before fusing
+
+One parameter you *do* control: how many candidates each leg returns before you fuse. Call it the *first-stage depth*. If the dense leg returns only its top-5 and BM25 only its top-5, then a document that dense ranked #8 — but which BM25 ranked #1 — can never be fused, because dense never surfaced it. You've thrown away exactly the cross-retriever rescue RRF exists to perform.
+
+So retrieve **wide** in the first stage, fuse, then narrow. A common shape: each leg returns its top **50–100**, you fuse those into one list, and you keep the fused top-k for whatever comes next (the reranker, in Lecture 2). The cost is cheap — a bigger `LIMIT` on a vector query and a few more BM25 scores — and the benefit is real: the more candidates each leg contributes, the more chances RRF has to find a document both legs liked.
+
+There's a tension with the reranker, though, and it's worth flagging now. The reranker (next lecture) is *expensive per candidate*, so you can't rerank 1,000 fused documents. The standard resolution: **fuse wide (top 50–100 per leg), then rerank the fused top-50, then keep the top-5.** The first stage is generous because retrieval is cheap; the second stage is selective because reranking is not. Get this wrong — fuse only the top-5 and call the reranker on those — and you cap the whole pipeline's recall at whatever the first stage's top-5 caught. We return to this in the Challenge's "trap" section, because it's the single most common way to build a pipeline that *looks* complete but quietly underperforms.
+
+> **Rule of thumb:** first-stage depth ≥ reranker input ≥ final result count. Retrieve 50, rerank 50, return 5. Never let the final count constrain the first-stage depth.
+
 ---
 
 ## 4. Where the lift actually comes from
@@ -259,6 +299,8 @@ The discipline this week is to put each of those on **one row of one table**, me
 
 The *concepts* — TF, IDF, `k1`, `b`, and RRF — are identical across all of them. Learn them on `rank-bm25`; the syllabus lab's "Tantivy or Elasticsearch" is the same BM25 with a faster engine underneath. The mini-project keeps the BM25 leg behind an interface precisely so you can swap `rank-bm25` for Postgres full-text in week 10 without touching the fusion code.
 
+One concrete preview of that production path, because you already have pgvector running: Postgres can do *both* legs in one place. You add a `tsvector` column (`ALTER TABLE chunks ADD COLUMN ts tsvector GENERATED ALWAYS AS (to_tsvector('english', content)) STORED;`), build a GIN index on it, and now a single database can rank by `<=>` (dense cosine) *and* by `ts_rank_cd(ts, plainto_tsquery('english', $1))` (lexical). You can even fuse them inside SQL with a CTE per leg and an RRF expression over the row numbers — which is exactly what the pgvector hybrid-search docs demonstrate. For a 50-clause corpus that's overkill; for the production system you'll design in week 10 it's the sane default, because it keeps both retrievers, the fusion, and the documents in one transactional store instead of three services you have to keep in sync. Either way the fusion math is the RRF you just learned — the engine underneath changes, the `Σ 1/(k + rank)` does not.
+
 ---
 
 ## 6. Recap
@@ -271,6 +313,7 @@ You should now be able to:
 - Build a `rank-bm25` index over a corpus and show it winning exactly the queries dense missed.
 - Fuse two ranked lists with RRF — `Σ 1/(k + rank)`, k=60, 1-based rank — by hand and in code.
 - Argue why RRF (rank-based, calibration-free) beats weighted score fusion (scale-mismatched, tuning-heavy) at this scale.
+- Set the first-stage depth correctly (retrieve wide, fuse, narrow) so the fusion has candidates to rescue and the reranker has a real candidate set to work on.
 
 Next up: the layer that turns a good candidate set into a *correctly ordered* one. A cross-encoder reads the query and each passage together and re-scores them — the cheapest meaningful win in RAG. Then HyDE and text-to-SQL, for the queries that retrieval alone can't reach. Continue to [Lecture 2 — Rerankers and Structured Retrieval](./02-rerankers-and-structured-retrieval.md).
 

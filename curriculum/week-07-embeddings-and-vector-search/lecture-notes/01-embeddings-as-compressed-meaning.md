@@ -252,7 +252,45 @@ A few things that aren't in the model card but will cost you a weekend:
 
 ---
 
-## 8. Recap
+## 8. Matryoshka, quantization, and the storage bill
+
+Two 2026 techniques change the economics of an embedding without changing which model you pick — and both are levers you reach for *after* the bakeoff, when the model is chosen and the corpus is large.
+
+**Matryoshka embeddings (MRL).** Models trained with Matryoshka Representation Learning (`nomic-embed-text-v1.5`, `jina-embeddings-v3`, OpenAI's `text-embedding-3-*`) pack the most important information into the *first* dimensions of the vector. That means you can **truncate** a 1024-dim vector to 256 dims and keep most of the retrieval quality — the leading dimensions carry the signal. The trade is explicit and measurable: a 768→256 truncation cuts storage and index size by 3× and speeds up every distance computation, at the cost of a few points of Recall@5. You truncate *then re-normalize* (the truncated vector is no longer unit length):
+
+```python
+full = model.encode(text, normalize_embeddings=True)   # e.g. (768,)
+truncated = full[:256]
+truncated = truncated / np.linalg.norm(truncated)      # re-normalize after slicing
+```
+
+The discipline is the same as everything this week: don't guess that 256 dims is "good enough" — run the bakeoff at 768 and at 256 and read the Recall@5 delta. On many corpora the drop is under two points, which is a fine trade for a 3× smaller index. On a hard corpus it's not. You measure.
+
+**Scalar and binary quantization.** A `float32` vector at 1024 dims is 4 KB. Across ten million chunks that's 40 GB of vectors before the index overhead. **Scalar quantization** (store each dimension as an `int8` instead of a `float32`) cuts that 4×; **binary quantization** (one bit per dimension, compared with Hamming distance) cuts it 32×, at a larger recall cost that you claw back with a re-scoring pass over the top candidates in full precision. pgvector supports `halfvec` (16-bit) natively, and the binary-then-rerank pattern is the standard way to serve a billion-scale index on commodity RAM. For this course's corpus you do not need quantization — but you must know the lever exists, because "the index doesn't fit in RAM" is the first wall you hit at scale, and quantization (not a bigger box) is usually the answer.
+
+> **The order of operations at scale:** pick the model by quality (the bakeoff), then truncate (Matryoshka) to the smallest dimension that holds your Recall@5, then quantize if the index still doesn't fit. Each step is a measured trade, not a default.
+
+---
+
+## 9. Domain and language: where the leaderboard lies hardest
+
+The MTEB Retrieval average is computed over a fixed set of mostly-English, mostly-general benchmarks. Two situations break the leaderboard's predictive power entirely, and both are common in real products.
+
+**Domain shift.** A model that tops MTEB on Wikipedia-style passages can underperform a lower-ranked model on legal clauses, clinical notes, or code, because the *register* of the text is different from anything the model saw enough of in training. The legal corpus you embed this week is a mild example — dense, clause-structured, citation-heavy text that looks nothing like a news article. The only reliable signal is your own 40-query gold set on your own corpus. When a teammate says "but model X is #1 on MTEB," the answer is "on *their* data; show me the number on *ours*."
+
+**Language.** If any of your corpus or queries are non-English, the English-only leaderboard is irrelevant. Reach for an explicitly multilingual model — `BAAI/bge-m3` (100+ languages, and it emits dense *and* sparse vectors, which you'll meet again in week 9) or `intfloat/multilingual-e5-large`. A monolingual English model on Spanish queries doesn't error; it silently returns worse results, which is the failure mode this whole week is training you to distrust.
+
+The takeaway compounds the week's mantra: the leaderboard narrows your candidate list; your gold set picks the winner. Never let a leaderboard rank be the last word on a model for *your* job.
+
+### Instruction-tuned and LLM-based embedders
+
+Two newer families are worth knowing because they change the cost/quality frontier. **Instruction-tuned embedders** (`intfloat/e5-mistral-7b-instruct`, the `gte-Qwen2` line, the `instructor` family) let you prepend a task *instruction* to the query — e.g. "Given a legal question, retrieve the clause that answers it" — and the model adapts its embedding to the task. On a specialized retrieval task this can buy real recall, because you're telling the model what "relevant" means for *your* job instead of relying on its generic notion. The cost is that these are large (a 7B embedder needs a GPU and is slow to run over a big corpus), so they sit at the quality-first end of the trade.
+
+**LLM-as-embedder** is the same idea taken further: a decoder-only LLM, with last-token or mean pooling, repurposed as an encoder. `e5-mistral` is the canonical 2026 example. These top several MTEB leaderboards but are heavy enough that you rarely embed a 10 GB corpus with one — the usual pattern is a small fast open model (BGE/GTE) for the bulk corpus and an instruction-tuned heavyweight only when a domain genuinely needs it and you've *measured* that the lift justifies the GPU bill. The decision is the same shape as everything else this week: candidates from the leaderboard, winner from your gold set, and the cost of running the model is part of the score.
+
+---
+
+## 10. Recap
 
 You should now be able to:
 

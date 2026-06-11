@@ -278,7 +278,39 @@ The cost lens this lecture adds:
 
 ---
 
-## 7. Recap
+## 7. The hidden tokens: chat templates, system prompts, and tools
+
+So far we counted the tokens in *your text*. But the model never sees your text — it sees a **chat template** applied to your text, and that template is itself tokens you pay for. Internalize this, because it is where "my count and the bill don't match" comes from.
+
+When you send `messages=[{"role": "user", "content": "Hi"}]`, the SDK (or the local serving stack) wraps it in the model's chat format before tokenizing. For an open model that wrapper looks something like:
+
+```
+<|im_start|>system
+You are a helpful assistant.<|im_end|>
+<|im_start|>user
+Hi<|im_end|>
+<|im_start|>assistant
+```
+
+Every one of those special tokens (`<|im_start|>`, `<|im_end|>`, the role words, the newlines) is a real token in the count. The two-character message `"Hi"` becomes a dozen-plus tokens once templated. Three consequences a senior engineer carries:
+
+- **`count_tokens` already includes the template.** When you call `client.messages.count_tokens(messages=[...])`, the number you get back is the *templated, real* count — which is exactly what you want, because that's what you pay for. When you instead use `AutoTokenizer.encode(raw_string)` you get the count of the raw string *without* the template, so the two are not directly comparable. Apply the chat template (`tokenizer.apply_chat_template(...)`) before counting an open model if you want the production-accurate number.
+- **The system prompt is re-tokenized and re-paid every single call.** A stateless model (Week 1 §1) means your wrapper re-sends the system prompt every turn, so a 1,500-token system prompt on a 50-turn conversation is 75,000 input tokens spent on the system prompt alone. This is the single most common "why is my bill so high" surprise, and it is the strongest argument for prompt caching (§6).
+- **Tool definitions are tokens too.** When you define tools for an agent (Phase III), each tool's JSON schema is serialized into the prompt and tokenized. A pile of verbose tool definitions can be thousands of input tokens re-sent on every step of an agent loop. "My agent is expensive" is often "my tool definitions are a 4,000-token tax on every one of its 20 steps."
+
+> **The accounting rule:** the tokens you pay for are the *templated* tokens — your content plus the chat scaffolding plus the system prompt plus any tool definitions — counted with the model's own tokenizer. The mini-project's `cost` instrument breaks these down for exactly this reason: so you can see that the system prompt, not your message, is the line item.
+
+This is also a new row for the Week 1 diagnosis table:
+
+| Symptom | Most likely cause | Fix |
+|---|---|---|
+| "My token count is lower than the bill says." | You counted the raw string, not the templated messages (or forgot the system prompt). | Count with `count_tokens` on the full `messages`, or apply the chat template before counting an open model. |
+| "Costs scale with conversation length faster than I expected." | The system prompt + history are re-sent and re-paid every turn (stateless model). | Trim the system prompt; cache the fixed prefix; summarize old history. |
+| "My agent's per-step cost is high even for trivial steps." | Verbose tool definitions re-tokenized every step. | Trim tool schemas; cache the tool block. |
+
+---
+
+## 8. Recap
 
 You should now be able to:
 

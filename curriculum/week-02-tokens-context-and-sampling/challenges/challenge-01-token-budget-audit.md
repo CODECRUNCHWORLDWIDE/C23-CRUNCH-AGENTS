@@ -32,6 +32,22 @@ Build (or reuse your Week-2 `toklab` token-accounting instrument) to record, per
 
 Produce a **baseline table**: for your 10 documents, the mean input tokens (broken down: system prompt / report / runbook / chat-template overhead), mean output tokens, mean cost/call, and the projected **monthly cost** at 40,000/day × 30. This is the "before" number finance sees.
 
+A worked baseline, to anchor the numbers (yours will differ; compute your own from real counts):
+
+```
+component        tokens   @ rate         cost/call
+system prompt     1,400   $5.00/MTok in  $0.00700
+incident report   2,000   $5.00/MTok in  $0.01000
+runbook appendix  3,500   $5.00/MTok in  $0.01750
+template overhead    40   $5.00/MTok in  $0.00020
+output (free text)  400   $25.00/MTok out $0.01000   <- 5x the input rate
+---------------------------------------------------------------
+                                          $0.04470 / call
+monthly: $0.04470 × 40,000 × 30 ........  $53,640 / month
+```
+
+Notice already where the money is: the runbook (re-sent every call) and the output (priced 5× the input). The system prompt is visible but is *not* the biggest line. That is the trap; see the bottom of this page.
+
 ## Step 2 — Find the waste (the four usual suspects)
 
 Audit where the tokens go and identify cuts. The four classic sources of token waste, at least three of which are present here:
@@ -50,11 +66,39 @@ Apply your cuts and re-measure on the **same 10 documents**:
 - Right-size the model tier for the task.
 - Switch the output to **schema-constrained JSON** (compact, parseable, no regex), shrinking output tokens.
 
-Re-run the instrument. Produce the **after table** (same columns as baseline) and the new projected monthly cost.
+Re-run the instrument. Produce the **after table** (same columns as baseline) and the new projected monthly cost. A plausible "after," for contrast with the worked baseline above:
+
+```
+component        tokens   @ rate            cost/call
+system prompt       500   $1.00/MTok in     $0.00050   (3 examples, no schema prose)
+incident report   2,000   $1.00/MTok in     $0.00200
+runbook cheatsheet  300   $1.00/MTok in     $0.00030   (summarized once, not pasted)
+template overhead    40   $1.00/MTok in     $0.00004
+output (JSON)        90   $5.00/MTok out    $0.00045   (constrained, compact)
+---------------------------------------------------------------------
+                          claude-haiku-4-5   $0.00329 / call
+monthly: $0.00329 × 40,000 × 30 ............ $3,948 / month   (was $53,640)
+```
+
+That is a ~93% cut — most of it from the tier change (Opus → Haiku for an easy extraction task), the runbook summarization, and constraining the verbose output to compact JSON. The exact split will differ for your numbers; the point is that you can attribute every dollar of the cut to a specific decision.
+
+When you make the cuts, do them **one at a time** and re-measure after each, so you can attribute the savings:
+
+1. **Trim the system prompt** (12 examples → 3, drop the schema-in-prose since the constraint enforces it). Re-measure.
+2. **Replace the runbook** with a 300-token summary or on-demand retrieval. Re-measure.
+3. **Constrain the output** to compact JSON (delete the regex parser). Re-measure — output tokens should drop sharply and cost-per-call with them, since output is the 5×-priced side.
+4. **Right-size the tier** (Opus → Sonnet or Haiku for an extraction task). Re-measure.
+
+This one-at-a-time discipline is what lets your memo say "the tier change saved $X, the output constraint saved $Y" instead of "we saved some money somehow." Attribution is the difference between a defensible audit and a lucky guess.
 
 ## Step 4 — Prove quality held
 
 A cost cut that breaks quality is not a cut; it's a regression you'll pay for later. Define a **quality bar** before you cut (e.g. "the triage category and priority match a human-labeled gold answer on all 10 docs; no invented facts in the summary"). Run your before and after pipelines against the 10 gold-labeled docs and report the quality score for each. The cut is only valid if quality is **>= baseline**.
+
+Two failure modes to watch for specifically:
+
+- **The tier change drops accuracy.** If Haiku misclassifies tickets Opus got right, you cut too far on the tier axis — back off to Sonnet and re-measure. The cheapest tier that *clears the bar* is the answer, not the cheapest tier full stop.
+- **The output constraint forces hallucination.** If your JSON schema makes a field required that the model has no information for, it will invent a value to satisfy the constraint. Constrain *structure*, not *substance* (Lecture 2 §4.4) — make optional what is genuinely optional, and check that the constrained output isn't fabricating to fill required fields.
 
 ## Deliverables
 

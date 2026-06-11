@@ -296,7 +296,25 @@ For **open-ended generation** (chat, writing, reasoning) it fails, for a sharp r
 
 ---
 
-## 6. Recap
+## 6. Determinism, seeds, and "why did I get a different answer?"
+
+One more thing the sampler owns, because it confuses people constantly: **reproducibility**. "I ran the same prompt twice and got two different answers — is the model broken?" No. The model (Stage 3) is deterministic: same token IDs in, same logits out (Week 1 §1). The *draw* (the `rng.choice` line in §3) is the only randomness, and whether you get the same answer twice depends entirely on three things you control:
+
+- **The sampler settings.** Greedy (`temperature → 0` or `top_k = 1`) has no draw — it's `argmax`, deterministic by construction. The same prompt gives the same output every time. The moment temperature is above 0 and the distribution isn't a single spike, the draw can differ run to run.
+- **The seed.** With temperature on, seed the RNG (`np.random.default_rng(42)` in your sampler; `seed=...` on a serving API that supports it) and the *sequence* of draws is reproducible — same prompt, same seed, same output. Change the seed, change the output. This is how you get "controlled randomness": varied outputs that are still reproducible for debugging.
+- **The hardware/numerics caveat.** Even greedy is not *bit-identical* across different GPUs or batch sizes, because floating-point reductions on parallel hardware aren't perfectly associative — the logits can differ in the last few bits, occasionally flipping an `argmax` tie. This is small and rare, but it's why "deterministic" has an asterisk in practice. For most engineering it doesn't matter; know it exists so you're not baffled when greedy gives a one-token difference across machines.
+
+The engineering takeaways:
+
+- **Need the same answer every time** (tests, caching, reproducible pipelines)? Use greedy, or set temperature 0. Determinism is a *setting*, not a property you hope for.
+- **Need varied-but-reproducible** (sampling N candidates you can regenerate)? Keep temperature up and *seed* the draw.
+- **"My evals are flaky"** is often "my sampler is non-deterministic and I didn't pin it." Pin the sampler before you debug the prompt. This is a load-bearing habit for Week 3, where a prompt's quality has to be a stable, measurable number — and you can't measure a moving target.
+
+> **Restating Week 1's claim, now operational:** determinism and randomness live in Stage 4, and you own Stage 4. The dice are one line of code. When output varies, look at the sampler settings and the seed before you look at anything else.
+
+---
+
+## 7. Recap
 
 You should now be able to:
 

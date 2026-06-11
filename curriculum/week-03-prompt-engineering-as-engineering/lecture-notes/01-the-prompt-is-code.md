@@ -34,6 +34,16 @@ Do those four things and "I improved the prompt" stops being a vibe and becomes:
 
 > **The promise of the week, stated as a test:** a prompt change you cannot express as a pass-rate delta against a fixed example set is a change you cannot defend. If your only evidence is "it feels better," you have shipped a wish.
 
+### Why the string-literal habit is so sticky — and so costly
+
+It is worth being honest about *why* prompts stay un-engineered even on teams that are otherwise disciplined. Three forces:
+
+- **The feedback loop feels instant.** Change the string, hit run, read a reply — it *looks* like you tested it. But you tested one input, once, with your own eyes grading it. That is not a test; it is a demo. The instant loop is exactly what lulls you out of building the slow loop (a golden set) that actually catches regressions.
+- **Natural language hides its own ambiguity.** A prompt reads like prose, so it feels finished when it is merely grammatical. But "classify the ticket" is wildly under-specified next to a function signature — what categories? what on a tie? what on an empty input? The prose *looks* complete while leaving the hard cases unstated, and the model fills the gaps unpredictably. A spec (next lecture's `exercise-01`) is how you force the ambiguity into the open.
+- **There is no compiler.** Code that is wrong often won't run; a prompt that is wrong runs fine and returns plausible text. Nothing fails loudly. The only thing standing between "subtly wrong prompt" and "shipped" is a test you chose to write — which is precisely why the discipline has to be deliberate. The language gives you no safety net, so you build one.
+
+The cost of skipping the discipline is not paid up front; it is paid later, all at once, when a "harmless wording tweak" silently breaks a refund-edge-case that a customer hits at 2 a.m. and no test caught. The string literal is cheap to write and expensive to own. The versioned, tested prompt is the reverse — and over a product's life the reverse is the bargain you want.
+
 ---
 
 ## 2. Golden examples: the unit of a prompt regression suite
@@ -59,6 +69,15 @@ How do you assert a property? Three flavors, cheapest first:
 - **LLM-rubric asserts** ("LLM-as-judge") — a *second* model call that scores the output against a rubric ("is this de-escalating? yes/no"). Use only when the property genuinely needs judgement (tone, faithfulness). It costs tokens and it can be wrong, so calibrate it (Week 12) and prefer the cheaper asserts where they suffice.
 
 The whole point of golden examples is that they make "better" computable. Once you have them, a prompt version is just a thing that produces a pass rate, and a prompt iteration is just a search for a higher one — *without* dropping a case you already had.
+
+### How big should the golden set be, and where do the examples come from?
+
+Two practical questions kill more prompt-test efforts than any other. Answers:
+
+- **Size: enough to make the pass rate move in steps you can read.** With 8 examples, each case is 12.5% of the score — a one-case flip is a 12.5-point swing, too coarse to distinguish "real improvement" from "noise on one ambiguous case." With 30 examples, each case is ~3.3% — fine enough that a version's pass rate is a meaningful number and a regression on one case still shows. Thirty is the floor the syllabus lab uses for a reason. For a high-stakes production prompt, 50–100 is normal.
+- **Provenance: mine your failures, not your imagination.** The best golden examples are *real* inputs that *really* failed — pulled from production logs, support tickets, or the cases a colleague flagged. A golden set you invented from a comfortable chair tends to test the easy middle and miss the weird edges that actually break in production. Seed the set with: every bug report you can find, the three most ambiguous cases you can think of, and a handful of adversarial inputs (Lecture 2). When a new failure shows up in production, the *first* thing you do is add it to the golden set — so the regression suite grows teeth with every incident.
+
+> **A golden set is a living artifact, not a one-time chore.** It starts at 30, and every production surprise adds a case. Six months in, it is the single best documentation of what your prompt is actually expected to do — better than any spec, because it is executable.
 
 ---
 
@@ -100,6 +119,12 @@ Recall Lecture 1 of Week 1: underneath these roles, the model still sees one **f
 - Few-shot exemplars → **system** (they're durable task scaffolding), or as alternating user/assistant turns if you want them to read as a mini-conversation. Either works; pick one and be consistent so your diffs stay legible.
 - Nothing you author → **assistant**. It's the model's output, full stop.
 
+### Why the separation is also a cost lever
+
+There is a second reason to keep durable instructions in `system` and only the per-call data in `user`, beyond cleanliness and injection-resistance: **prompt caching**. On hosted models, a long, *stable* system prefix can be cached across calls — you pay full price to process it once, then a fraction on subsequent calls that reuse the same prefix. This is the same KV-cache reuse you measured in Week 1, persisted across requests. If your system prompt is stable (it should be — that's the whole point of versioning it) and your variable data lives in the user turn, you get this for free. Mix the two — splice the ticket text into the middle of the system prompt — and you bust the cache on every call, because the prefix changes every time. So "instructions in system, data in user" is not just hygiene; on a high-volume task it is a measurable cost decision. You will formalize prompt caching in Week 21; recognize now that the role discipline you're learning *enables* it.
+
+That is three reasons converging on the same rule: clean diffs (the versioned thing doesn't move), injection-resistance (untrusted data stays out of the instruction position), and cost (a stable prefix caches). When one rule earns its place three different ways, it's a load-bearing rule. Keep it.
+
 ---
 
 ## 4. Few-shot patterns: demonstrate, don't only describe
@@ -129,8 +154,11 @@ But few-shot is not free, and it is not foolproof:
 - **Exemplars cost tokens on every call.** Four examples might add 150 tokens to *every* request. Your `toklab` instinct applies: measure the cost of carrying them, and trim exemplars that don't move the pass rate.
 - **Selection and ordering matter.** Examples that cluster on one category bias the model toward it. Cover the categories evenly, and put the hard/edge cases in — examples that disambiguate are worth more than examples that confirm the obvious. Recency effects are real: the last example carries extra weight on some models.
 - **Bad examples teach bad behavior.** A mislabeled exemplar is worse than none — the model faithfully learns your mistake. Few-shot examples are part of the prompt, so they go through the same review and the same regression suite.
+- **Never let an exemplar overlap your golden set.** If "I was charged twice → billing" is *both* a few-shot example in the prompt *and* a golden test case, the test is rigged — you're checking whether the model can copy an answer you handed it, not whether it generalizes. Keep the exemplars and the test set disjoint, the same way you keep training and test data disjoint in ML. An overlapping example inflates your pass rate and hides exactly the failures the suite exists to find.
 
 The engineering move is the same as always: treat the exemplar set as part of the versioned prompt, and let the pass rate — not your intuition about "more examples = better" — decide how many and which.
+
+A quick sanity check before you add a fifth example: ask whether the failure you're trying to fix is a *boundary* problem (the model doesn't know which category an ambiguous case belongs to — few-shot helps) or a *capability* problem (the model can't do the underlying task at all — few-shot won't save it, and you need a different model or a decomposition). Few-shot pins boundaries; it does not grant abilities. Spending exemplars on a capability gap is a common, expensive mistake — you add five examples, the pass rate doesn't move, and you've made every call more expensive for nothing. The pass rate tells you which kind of problem you have; listen to it.
 
 ---
 
@@ -203,6 +231,20 @@ The catch is in the cost column, and you already have the instinct to see it:
 
 > **The pattern under all three (few-shot, CoT, self-consistency):** each is a lever that trades tokens (cost/latency) for accuracy. None is free, none is universal. The engineer's job is not to apply the lever — it is to *measure* the trade on the actual task and pull it only when the pass rate justifies the token bill.
 
+### A decision table for the three levers
+
+You will reach for these constantly. Carry the table, not the slogans:
+
+| Lever | What it costs | When it earns its keep | When it's waste |
+|---|---|---|---|
+| **Few-shot** | tokens on every call (the exemplars ride along) | ambiguous boundaries; format that's easier shown than described | the task is unambiguous and zero-shot already passes; examples that only confirm the obvious |
+| **Chain-of-thought** | more output tokens + latency per call | genuine multi-step reasoning (math, multi-hop, planning) on a capable model | single-step classification/extraction; small models; prompts already padded with distracting context |
+| **Self-consistency** | N× calls (N× cost and latency) | high-stakes, low-volume reasoning where a wrong answer is expensive and the answer is discrete | high-volume low-margin tasks; free-form output where "majority" is undefined; easy tasks CoT already nails |
+
+The through-line: **start at the cheapest lever and only climb when the pass rate makes you.** Zero-shot before few-shot, few-shot before CoT, single-path before self-consistency. Each rung up costs tokens; the golden set tells you whether the rung bought anything. An engineer who reaches straight for self-consistency on a ticket classifier is the prompt-engineering equivalent of the Week-1 engineer who reaches for the frontier model on an easy job — optimizing the wrong axis and paying for it.
+
+> **The honest meta-lesson of §4–6:** prompt-engineering "tricks" are not magic words. They are cost/accuracy levers with measurable trade-offs, and 2026's frontier reasoning models have absorbed several of them (the model reasons internally; you request *effort*, not "think step by step"). What does not get absorbed — what stays your job forever — is *measuring whether the lever helped on your task*. The trick is dead; the measurement is the skill.
+
 ---
 
 ## 7. Diffing prompts: a worked iteration
@@ -236,6 +278,16 @@ git commit --amend -m "v2: prioritize billing on multi-issue tickets; 21/30 (was
 
 Now the history tells the story: a diff you can read, a rule you can justify, a number that moved, a SHA you can revert to if v3 regresses. *That* is prompt engineering as engineering. The wording change was the easy part; the diff, the test, and the commit are what make it real.
 
+### Three iteration anti-patterns to name and avoid
+
+Once you start iterating against a golden set, three failure modes show up. Name them so you can catch yourself:
+
+1. **Overfitting to the golden set.** You keep adding rules until you pass 30/30 — but each rule was reverse-engineered from a specific failing case, and the prompt is now a brittle pile of special cases that generalizes worse than v2 did. The tell: the prompt grew three rules to fix three cases and the rules don't share a principle. The fix: hold out a few examples the prompt *never* trains against (a validation split, exactly like ML), and watch those too. A prompt that aces the training cases but slips on the held-out ones is memorizing, not improving.
+2. **Chasing the LLM-judge instead of the task.** If an `llm-rubric` assert decides "pass," it is tempting to tune the prompt until the *judge* is happy — which can drift away from what a *human* would call correct, because the judge is itself a fallible model. The fix: calibrate the judge against human labels (Week 12) and prefer cheap mechanical asserts wherever the property is mechanically checkable.
+3. **One-way ratcheting.** Fixing the case in front of you without re-running the *whole* set, so you silently regress a case you fixed last week. This is the exact failure the gate exists to prevent — and it only works if you run all 30 on *every* version, not just the ones you suspect changed.
+
+> **The discipline in one line:** every version runs against every example, "better" means higher rate AND no regression, and you hold a few cases out so you can tell improvement from memorization. Do that and your prompt gets monotonically better; skip it and it thrashes.
+
 ---
 
 ## 8. Recap
@@ -248,6 +300,21 @@ You should now be able to:
 - Apply few-shot with judgement: examples to pin ambiguous boundaries and fix format, but versioned, reviewed, cost-measured, and trimmed by the pass rate.
 - Tell chain-of-thought honestly: it is task- and model-shaped, it is hurt by irrelevant context, and its visible reasoning is not a faithful audit of the answer — so test it, don't assume it.
 - Explain self-consistency as majority-vote-over-N-paths, and reason about when N× the cost buys enough accuracy to justify it.
+
+### The one-page checklist for this lecture
+
+Pin this where you write prompts. Before you call a prompt "done":
+
+- [ ] It lives in a **file** with a version number, not a string literal.
+- [ ] There is a **golden set** of ≥20 examples spanning easy, ambiguous, and adversarial cases — seeded from real failures, not invented.
+- [ ] Each example asserts a **property** (the cheapest assert that captures it), not an exact string.
+- [ ] Few-shot exemplars (if any) are **disjoint** from the golden set and earn their token cost on the pass rate.
+- [ ] Durable instructions are in **`system`**, untrusted data in **`user`**, nothing authored in **`assistant`** (no prefill on 2026 models).
+- [ ] You **tested** whether CoT / self-consistency help on *this* task — and dropped them where they don't.
+- [ ] "Better" is a **pass-rate delta with no regression**, committed with a SHA — not a vibe.
+- [ ] You hold a few cases **out of training** so you can tell improvement from memorization.
+
+If every box is checked, you have a prompt you can defend in a review. If any box is empty, you have a wish with extra steps.
 
 Next: the operational half. How role-prompting fails, why the jailbreak surface exists, and — the spine of the week's lab — how to *version and regression-test* prompts with promptfoo and Langfuse, and run a disciplined spec-then-implement loop in Claude Code and Cursor. Continue to [Lecture 2 — Versioning, Testing, and the Jailbreak Surface](./02-versioning-testing-and-the-jailbreak-surface.md).
 
