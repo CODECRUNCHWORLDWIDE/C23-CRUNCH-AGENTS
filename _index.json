@@ -1,0 +1,1081 @@
+{
+  "repo": "C23-CRUNCH-AGENTS",
+  "files": [
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "title": "Contributor Covenant Code of Conduct"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "title": "Contributing to Crunch Agents"
+    },
+    {
+      "path": "README.md",
+      "title": "C23 \u00b7 Crunch Agents \u2014 AI Agent Systems Engineering"
+    },
+    {
+      "path": "community/CHARTER.md",
+      "title": "C23 \u00b7 Crunch Agents \u2014 Charter"
+    },
+    {
+      "path": "curriculum/SYLLABUS.md",
+      "title": "C23 \u00b7 Crunch Agents \u2014 Syllabus"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/README.md",
+      "title": "Week 1 \u2014 The LLM as a System Component"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/challenges/README.md",
+      "title": "Week 1 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/challenges/challenge-01-model-selection-memo.md",
+      "title": "Challenge 1 \u2014 The Model-Selection Memo"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/exercises/README.md",
+      "title": "Week 1 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/exercises/exercise-01-read-three-model-cards.md",
+      "title": "Exercise 1 \u2014 Read Three Model Cards"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/homework.md",
+      "title": "Week 1 Homework"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/lecture-notes/01-the-model-is-a-function.md",
+      "title": "Lecture 1 \u2014 The Model Is a Function: Tokens In, A Distribution Out"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/lecture-notes/02-the-landscape-cards-and-licenses.md",
+      "title": "Lecture 2 \u2014 The Landscape, the Cards, and the Licenses"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/mini-project/README.md",
+      "title": "Mini-Project \u2014 `llmpick`: A Model Recommender That Shows Its Work"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/quiz.md",
+      "title": "Week 1 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-01-llm-as-a-system-component/resources.md",
+      "title": "Week 1 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/README.md",
+      "title": "Week 2 \u2014 Tokens, Context, and Sampling"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/challenges/README.md",
+      "title": "Week 2 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/challenges/challenge-01-token-budget-audit.md",
+      "title": "Challenge 1 \u2014 The Token-Budget Audit"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/exercises/README.md",
+      "title": "Week 2 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/exercises/exercise-01-tokenizer-explorer.md",
+      "title": "Exercise 1 \u2014 The Tokenizer Explorer"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/homework.md",
+      "title": "Week 2 Homework"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/lecture-notes/01-tokenization-and-cost.md",
+      "title": "Lecture 1 \u2014 Tokenization and Cost: What You Pay For, and Why Your Estimate Is Wrong"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/lecture-notes/02-sampling-and-structured-output.md",
+      "title": "Lecture 2 \u2014 Sampling and Structured Output: Turning Logits Into Tokens, On Purpose"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/mini-project/README.md",
+      "title": "Mini-Project \u2014 `toklab`: A Tokenization, Cost, and Constrained-Output Lab"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/quiz.md",
+      "title": "Week 2 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-02-tokens-context-and-sampling/resources.md",
+      "title": "Week 2 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/README.md",
+      "title": "Week 3 \u2014 Prompt Engineering as Engineering"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/challenges/README.md",
+      "title": "Week 3 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/challenges/challenge-01-regression-test-a-prompt.md",
+      "title": "Challenge 1 \u2014 Regression-Test a Prompt"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/exercises/README.md",
+      "title": "Week 3 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/exercises/exercise-01-spec-then-implement.md",
+      "title": "Exercise 1 \u2014 Spec Then Implement"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/homework.md",
+      "title": "Week 3 Homework"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/lecture-notes/01-the-prompt-is-code.md",
+      "title": "Lecture 1 \u2014 The Prompt Is Code: Version It, Diff It, Test It"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/lecture-notes/02-versioning-testing-and-the-jailbreak-surface.md",
+      "title": "Lecture 2 \u2014 Versioning, Testing, and the Jailbreak Surface"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/mini-project/README.md",
+      "title": "Mini-Project \u2014 `promptlab`: A Versioned Prompt Registry With a Regression Gate"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/quiz.md",
+      "title": "Week 3 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-03-prompt-engineering-as-engineering/resources.md",
+      "title": "Week 3 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/README.md",
+      "title": "Week 4 \u2014 Tool Calling and Structured Output"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/challenges/README.md",
+      "title": "Week 4 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/challenges/challenge-01-cross-vendor-tool-bridge.md",
+      "title": "Challenge 1 \u2014 The Cross-Vendor Tool Bridge"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/exercises/README.md",
+      "title": "Week 4 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/exercises/exercise-01-design-a-tool-schema.md",
+      "title": "Exercise 1 \u2014 Design a Tool Schema"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/homework.md",
+      "title": "Week 4 Homework"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/lecture-notes/01-the-tool-call-contract.md",
+      "title": "Lecture 1 \u2014 The Tool-Call Contract: What the Model Actually Asks For"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/lecture-notes/02-structured-output-mcp-and-the-security-surface.md",
+      "title": "Lecture 2 \u2014 Structured Output, MCP, and the Security Surface"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunch_tools`: A Hardened Four-Tool Agent Surface, Benchmarked Frontier-vs-Local"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/quiz.md",
+      "title": "Week 4 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-04-tool-calling-and-structured-output/resources.md",
+      "title": "Week 4 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/README.md",
+      "title": "Week 5 \u2014 The Agent Loop"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/challenges/README.md",
+      "title": "Week 5 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/challenges/challenge-01-hand-rolled-vs-sdk.md",
+      "title": "Challenge 1 \u2014 Hand-Rolled vs the SDK"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/exercises/README.md",
+      "title": "Week 5 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/exercises/exercise-01-trace-a-run.md",
+      "title": "Exercise 1 \u2014 Trace a Run and Find the Failure"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/homework.md",
+      "title": "Week 5 Homework"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/lecture-notes/01-react-from-scratch.md",
+      "title": "Lecture 1 \u2014 The Agent Loop, ReAct, and a Hand-Rolled Agent"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/lecture-notes/02-budgets-failure-modes-and-the-sdks.md",
+      "title": "Lecture 2 \u2014 Budgets, Failure Modes, and the SDKs"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunch_agent`: A Benchmarked ReAct Agent, Frontier vs Local"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/quiz.md",
+      "title": "Week 5 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-05-the-agent-loop/resources.md",
+      "title": "Week 5 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/README.md",
+      "title": "Week 6 \u2014 Local Inference Bring-Up"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/challenges/README.md",
+      "title": "Week 6 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/challenges/challenge-01-three-engine-bakeoff.md",
+      "title": "Challenge 1 \u2014 The Three-Engine Bakeoff"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/exercises/README.md",
+      "title": "Week 6 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/exercises/exercise-01-bring-up-three-engines.md",
+      "title": "Exercise 1 \u2014 Bring Up the Same 7B on Three Engines"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/homework.md",
+      "title": "Week 6 Homework"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/lecture-notes/01-the-local-inference-stack.md",
+      "title": "Lecture 1 \u2014 The Local Inference Stack: Why, Prefill vs Decode, and the Three Engines"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/lecture-notes/02-quantization-batching-and-serving.md",
+      "title": "Lecture 2 \u2014 Quantization, Batching, and the Honest Benchmark"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchserve`: The Inference Benchmark Harness"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/quiz.md",
+      "title": "Week 6 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-06-local-inference-bring-up/resources.md",
+      "title": "Week 6 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/README.md",
+      "title": "Week 7 \u2014 Embeddings and Vector Search"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/challenges/README.md",
+      "title": "Week 7 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/challenges/challenge-01-embedding-bakeoff.md",
+      "title": "Challenge 1 \u2014 The Embedding Bakeoff"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/exercises/README.md",
+      "title": "Week 7 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/exercises/exercise-01-embed-and-inspect.md",
+      "title": "Exercise 1 \u2014 Embed and Inspect"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/homework.md",
+      "title": "Week 7 Homework"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/lecture-notes/01-embeddings-as-compressed-meaning.md",
+      "title": "Lecture 1 \u2014 Embeddings as Compressed Meaning: Models, MTEB, and Metrics"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/lecture-notes/02-ann-indexes-and-vector-search.md",
+      "title": "Lecture 2 \u2014 ANN Indexes, pgvector, and Measuring Retrieval"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchrag_embed`: The Embedding Bakeoff Harness"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/quiz.md",
+      "title": "Week 7 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-07-embeddings-and-vector-search/resources.md",
+      "title": "Week 7 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/README.md",
+      "title": "Week 8 \u2014 Chunking and Document Processing"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/challenges/README.md",
+      "title": "Week 8 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/challenges/challenge-01-chunking-ab.md",
+      "title": "Challenge 1 \u2014 The Chunking A/B"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/exercises/README.md",
+      "title": "Week 8 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/exercises/exercise-01-extract-a-pdf.md",
+      "title": "Exercise 1 \u2014 Extract a PDF Three Ways"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/homework.md",
+      "title": "Week 8 Homework"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/lecture-notes/01-chunking-strategies.md",
+      "title": "Lecture 1 \u2014 Chunking Strategies: The Five Cuts and Why Size Is a Hyperparameter"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/lecture-notes/02-document-extraction-and-evaluation.md",
+      "title": "Lecture 2 \u2014 Document Extraction and the A/B Methodology"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchrag_chunk`: The Chunking A/B Harness"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/quiz.md",
+      "title": "Week 8 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-08-chunking-and-document-processing/resources.md",
+      "title": "Week 8 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/README.md",
+      "title": "Week 9 \u2014 Reranking, Hybrid Search, and Structured Retrieval"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/challenges/README.md",
+      "title": "Week 9 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/challenges/challenge-01-cumulative-lift.md",
+      "title": "Challenge 1 \u2014 The Cumulative-Lift Chart"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/exercises/README.md",
+      "title": "Week 9 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/exercises/exercise-01-bm25-baseline.md",
+      "title": "Exercise 1 \u2014 BM25 Baseline"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/homework.md",
+      "title": "Week 9 Homework"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/lecture-notes/01-why-dense-is-not-enough-bm25-and-hybrid.md",
+      "title": "Lecture 1 \u2014 Why Dense Is Not Enough: BM25 and Hybrid Search"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/lecture-notes/02-rerankers-and-structured-retrieval.md",
+      "title": "Lecture 2 \u2014 Rerankers and Structured Retrieval"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchrag_hybrid`: The Layered Retriever and Lift Chart"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/quiz.md",
+      "title": "Week 9 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-09-reranking-hybrid-search-structured-retrieval/resources.md",
+      "title": "Week 9 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/README.md",
+      "title": "Week 10 \u2014 Vector Stores in Production"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/challenges/README.md",
+      "title": "Week 10 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/challenges/challenge-01-store-bakeoff.md",
+      "title": "Challenge 1 \u2014 The Vector-Store Bakeoff"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/exercises/README.md",
+      "title": "Week 10 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/exercises/exercise-01-three-stores-same-pipeline.md",
+      "title": "Exercise 1 \u2014 Three Stores, One Pipeline, One Adapter"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/homework.md",
+      "title": "Week 10 Homework"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/lecture-notes/01-the-vector-store-landscape.md",
+      "title": "Lecture 1 \u2014 The Vector-Store Landscape, Filtered ANN, and the Criteria That Actually Matter"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/lecture-notes/02-operations-graphrag-and-agentic-rag.md",
+      "title": "Lecture 2 \u2014 Operations, the Recovery Drill, GraphRAG, and Agentic RAG"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchstore`: The Vector-Store Adapter + Operational Bakeoff"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/quiz.md",
+      "title": "Week 10 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-10-vector-stores-in-production/resources.md",
+      "title": "Week 10 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/README.md",
+      "title": "Week 11 \u2014 Memory Systems and Context Budgeting"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/challenges/README.md",
+      "title": "Week 11 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/challenges/challenge-01-three-tier-memory.md",
+      "title": "Challenge 1 \u2014 The Three-Tier Memory Agent"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/exercises/README.md",
+      "title": "Week 11 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/exercises/exercise-01-budget-the-window.md",
+      "title": "Exercise 1 \u2014 Budget the Context Window Like a Cache"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/homework.md",
+      "title": "Week 11 Homework"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/lecture-notes/01-memory-tiers-and-summarization.md",
+      "title": "Lecture 1 \u2014 The Three Memory Tiers and Summarization Strategies"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/lecture-notes/02-context-budgeting-eviction-and-evaluation.md",
+      "title": "Lecture 2 \u2014 Context Budgeting, Eviction, and Measuring Memory"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchmem`: The Three-Tier Memory System + Regression Harness"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/quiz.md",
+      "title": "Week 11 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-11-memory-systems-and-context-budgeting/resources.md",
+      "title": "Week 11 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/README.md",
+      "title": "Week 12 \u2014 Multimodal RAG and Evaluation"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/challenges/README.md",
+      "title": "Week 12 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/challenges/challenge-01-ragas-report-three-variants.md",
+      "title": "Challenge 1 \u2014 The Ragas Report Across Three Variants"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/exercises/README.md",
+      "title": "Week 12 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/exercises/exercise-01-vlm-vs-claude-over-a-figure.md",
+      "title": "Exercise 1 \u2014 VLM vs. Claude Over a Figure"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/homework.md",
+      "title": "Week 12 Homework"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/lecture-notes/01-multimodal-rag.md",
+      "title": "Lecture 1 \u2014 Multimodal RAG: When the Answer Is in the Picture"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/lecture-notes/02-evaluation-and-llm-as-judge.md",
+      "title": "Lecture 2 \u2014 Evaluation and the Calibrated LLM-as-Judge"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchrag_eval`: The Calibrated RAG Evaluation Suite"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/quiz.md",
+      "title": "Week 12 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-12-multimodal-rag-and-evaluation/resources.md",
+      "title": "Week 12 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/README.md",
+      "title": "Week 13 \u2014 LangGraph and the Graph Pattern"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/challenges/README.md",
+      "title": "Week 13 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/challenges/challenge-01-react-loop-to-graph.md",
+      "title": "Challenge 1 \u2014 From ReAct Loop to State Graph"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/exercises/README.md",
+      "title": "Week 13 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/exercises/exercise-01-first-state-graph.md",
+      "title": "Exercise 1 \u2014 Your First State Graph"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/homework.md",
+      "title": "Week 13 Homework"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/lecture-notes/01-when-the-loop-becomes-a-graph.md",
+      "title": "Lecture 1 \u2014 When the Loop Becomes a Graph: LangGraph Mechanics and the ReAct Re-Implementation"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/lecture-notes/02-persistence-patterns-and-framework-honesty.md",
+      "title": "Lecture 2 \u2014 Persistence, Multi-Agent Patterns, and Framework Honesty"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchagent_graph`: A Reusable Agent-Graph Package"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/quiz.md",
+      "title": "Week 13 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-13-langgraph-and-the-graph-pattern/resources.md",
+      "title": "Week 13 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/README.md",
+      "title": "Week 14 \u2014 Mastra, Inngest, and TypeScript Agent Stacks"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/challenges/README.md",
+      "title": "Week 14 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/challenges/challenge-01-polyglot-supervisor.md",
+      "title": "Challenge 1 \u2014 The Polyglot Supervisor"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/exercises/README.md",
+      "title": "Week 14 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/exercises/exercise-01-scaffold-a-mastra-agent.md",
+      "title": "Exercise 1 \u2014 Scaffold a Mastra Agent"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/homework.md",
+      "title": "Week 14 Homework"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/lecture-notes/01-mastra-and-the-typescript-agent-stack.md",
+      "title": "Lecture 1 \u2014 Mastra and the TypeScript Agent Stack"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/lecture-notes/02-durable-execution-and-event-driven-agents.md",
+      "title": "Lecture 2 \u2014 Durable Execution and Event-Driven Agents"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchagent-durable`: A Reusable Durable-Agent Package"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/quiz.md",
+      "title": "Week 14 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-14-mastra-inngest-and-typescript-agent-stacks/resources.md",
+      "title": "Week 14 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/README.md",
+      "title": "Week 15 \u2014 MCP, the Cross-Vendor Tool Protocol"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/challenges/README.md",
+      "title": "Week 15 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/challenges/challenge-01-two-servers-two-transports.md",
+      "title": "Challenge 1 \u2014 Two Servers, Two Transports, One Agent"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/exercises/README.md",
+      "title": "Week 15 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/exercises/exercise-01-trace-an-mcp-session.md",
+      "title": "Exercise 1 \u2014 Trace an MCP Session"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/homework.md",
+      "title": "Week 15 Homework"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/lecture-notes/01-the-protocol-and-the-primitives.md",
+      "title": "Lecture 1 \u2014 The Protocol and the Primitives: Host, Client, Server, and the Three Things a Server Exposes"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/lecture-notes/02-transports-clients-and-security.md",
+      "title": "Lecture 2 \u2014 Transports, Clients, and Security: How the Messages Travel, Who Consumes Them, and Why a Tool Is RCE"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchmcp`: A Multi-Transport MCP Toolkit"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/quiz.md",
+      "title": "Week 15 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-15-mcp-the-cross-vendor-tool-protocol/resources.md",
+      "title": "Week 15 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/README.md",
+      "title": "Week 16 \u2014 Fine-Tuning at the Modern Scale"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/challenges/README.md",
+      "title": "Week 16 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/challenges/challenge-01-fine-tune-and-judge.md",
+      "title": "Challenge 1 \u2014 Fine-Tune and Judge"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/exercises/README.md",
+      "title": "Week 16 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/exercises/exercise-01-decide-to-fine-tune.md",
+      "title": "Exercise 1 \u2014 Decide to Fine-Tune (Usually: Don't)"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/homework.md",
+      "title": "Week 16 Homework"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/lecture-notes/01-when-to-fine-tune-and-peft.md",
+      "title": "Lecture 1 \u2014 When to Fine-Tune (Usually: Don't) and the PEFT That Makes It Cheap When You Do"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/lecture-notes/02-data-training-and-honest-evaluation.md",
+      "title": "Lecture 2 \u2014 Data, Training, and Honest Evaluation: The Parts That Decide Whether the Fine-Tune Was Worth It"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchtune`: A Fine-Tune-or-Not Pipeline"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/quiz.md",
+      "title": "Week 16 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-16-fine-tuning-at-the-modern-scale/resources.md",
+      "title": "Week 16 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/README.md",
+      "title": "Week 17 \u2014 Safety: Prompt Injection, Jailbreaks, and Output Filtering"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/challenges/README.md",
+      "title": "Week 17 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/challenges/challenge-01-red-team-your-agent.md",
+      "title": "Challenge 1 \u2014 Red-Team Your Agent"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/exercises/README.md",
+      "title": "Week 17 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/exercises/exercise-01-write-attacks.md",
+      "title": "Exercise 1 \u2014 Write Attacks (and Make Them Measurable)"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/homework.md",
+      "title": "Week 17 Homework"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/lecture-notes/01-prompt-injection-and-the-jailbreak-surface.md",
+      "title": "Lecture 1 \u2014 Prompt Injection, the Jailbreak Surface, and Threat-Modeling a Tool Surface"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/lecture-notes/02-defenses-output-filtering-and-red-teaming.md",
+      "title": "Lecture 2 \u2014 Defenses, Output Filtering, and Red-Teaming: Driving the Attack-Success-Rate Down with Evidence"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchguard`: An Agent Red-Team and Defense Toolkit"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/quiz.md",
+      "title": "Week 17 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-17-safety-prompt-injection-jailbreaks-output-filtering/resources.md",
+      "title": "Week 17 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/README.md",
+      "title": "Week 18 \u2014 Observability for Agentic Systems"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/challenges/README.md",
+      "title": "Week 18 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/challenges/challenge-01-instrument-and-find-the-failure.md",
+      "title": "Challenge 1 \u2014 Instrument the Stack and Find the Failure"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/exercises/README.md",
+      "title": "Week 18 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/exercises/exercise-01-read-a-trace.md",
+      "title": "Exercise 1 \u2014 Read a Trace"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/homework.md",
+      "title": "Week 18 Homework"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/lecture-notes/01-tracing-and-otel-genai-conventions.md",
+      "title": "Lecture 1 \u2014 Tracing an Agent: Spans, Traces, and the OpenTelemetry Gen-AI Conventions"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/lecture-notes/02-dashboards-slos-and-trace-driven-debugging.md",
+      "title": "Lecture 2 \u2014 Dashboards, SLOs, and Trace-Driven Debugging"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchobs`: The Reusable Observability Package"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/quiz.md",
+      "title": "Week 18 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-18-observability-for-agentic-systems/resources.md",
+      "title": "Week 18 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/README.md",
+      "title": "Week 19 \u2014 vLLM in Production"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/challenges/README.md",
+      "title": "Week 19 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/challenges/challenge-01-concurrency-sweep.md",
+      "title": "Challenge 1 \u2014 The vLLM + LiteLLM Break-Even Lab"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/exercises/README.md",
+      "title": "Week 19 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/exercises/exercise-01-stand-up-vllm.md",
+      "title": "Exercise 1 \u2014 Stand up vLLM and read its KV-cache log"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/homework.md",
+      "title": "Week 19 Homework"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/lecture-notes/01-paged-attention-and-continuous-batching.md",
+      "title": "Lecture 1 \u2014 PagedAttention and Continuous Batching: Making the GPU Busy"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/lecture-notes/02-litellm-routing-and-self-hosted-economics.md",
+      "title": "Lecture 2 \u2014 LiteLLM Routing and Self-Hosted Economics"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchserve`: The Self-Hosted Serving + Routing + Benchmarking Harness"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/quiz.md",
+      "title": "Week 19 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-19-vllm-in-production/resources.md",
+      "title": "Week 19 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/README.md",
+      "title": "Week 20 \u2014 NeMo Inference and the NVIDIA Stack"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/challenges/README.md",
+      "title": "Week 20 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/challenges/challenge-01-qwen-nemo-vs-vllm.md",
+      "title": "Challenge 1 \u2014 Qwen2.5-14B: NeMo vs vLLM, with a Rail"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/exercises/README.md",
+      "title": "Week 20 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/exercises/exercise-01-triton-trtllm-deploy.md",
+      "title": "Exercise 1 \u2014 Triton + TensorRT-LLM Deploy"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/homework.md",
+      "title": "Week 20 Homework"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/lecture-notes/01-the-nvidia-inference-stack-tensorrt-llm-triton-nemo.md",
+      "title": "Lecture 1 \u2014 The NVIDIA Inference Stack: TensorRT-LLM, Triton, and the Honest vLLM Trade-off"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/lecture-notes/02-nemo-guardrails-as-policy.md",
+      "title": "Lecture 2 \u2014 NeMo Guardrails as Policy: Colang, Rails, and Blocking a Class of Prompt Injection"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchnemo`: The Guardrailed-Serving + Decision Harness"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/quiz.md",
+      "title": "Week 20 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-20-nemo-inference-and-the-nvidia-stack/resources.md",
+      "title": "Week 20 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/README.md",
+      "title": "Week 21 \u2014 Cost Engineering and Model Routing"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/challenges/README.md",
+      "title": "Week 21 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/challenges/challenge-01-cost-reduction.md",
+      "title": "Challenge 1 \u2014 The Cost-Reduction Lab"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/exercises/README.md",
+      "title": "Week 21 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/exercises/exercise-01-token-accounting.md",
+      "title": "Exercise 1 \u2014 Token accounting: find where the money goes"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/homework.md",
+      "title": "Week 21 Homework"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/lecture-notes/01-token-accounting-caching-and-compression.md",
+      "title": "Lecture 1 \u2014 Token Accounting, Caching, and Compression: The Cheapest Token Is the One You Don't Generate"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/lecture-notes/02-model-routing-cascades-and-batching.md",
+      "title": "Lecture 2 \u2014 Model Routing, Cascades, and Batching: Let the 7B Handle It"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchroute`: The Cost-Engineering Harness"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/quiz.md",
+      "title": "Week 21 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-21-cost-engineering-and-model-routing/resources.md",
+      "title": "Week 21 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/README.md",
+      "title": "Week 22 \u2014 Capstone Sprint A: Architecture, Retrieval, Memory"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/challenges/README.md",
+      "title": "Week 22 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/challenges/challenge-01-sprint-a-foundation.md",
+      "title": "Challenge 1 \u2014 The Sprint A Foundation"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/exercises/README.md",
+      "title": "Week 22 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/exercises/exercise-01-architecture-diagram.md",
+      "title": "Exercise 1 \u2014 The architecture diagram and component table"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/homework.md",
+      "title": "Week 22 Homework"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/lecture-notes/01-architecture-document-and-corpus-ingestion.md",
+      "title": "Lecture 1 \u2014 The Architecture Document and Corpus Ingestion: Write the Document First"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/lecture-notes/02-memory-tiers-and-the-supervisor-draft.md",
+      "title": "Lecture 2 \u2014 Memory Tiers and the Supervisor Draft: The Contracts the Agents Plug Into"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/mini-project/README.md",
+      "title": "Mini-Project \u2014 `crunchcap`: The Capstone Foundation (Retrieval + Memory Substrate)"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/quiz.md",
+      "title": "Week 22 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-22-capstone-sprint-a-architecture-retrieval-memory/resources.md",
+      "title": "Week 22 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/README.md",
+      "title": "Week 23 \u2014 Capstone Sprint B \u2014 Agents, MCP, Eval, Serving"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/challenges/README.md",
+      "title": "Week 23 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/challenges/challenge-01-end-to-end-green.md",
+      "title": "Challenge 1 \u2014 End-to-End Green"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/exercises/README.md",
+      "title": "Week 23 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/exercises/exercise-01-route-the-supervisor.md",
+      "title": "Exercise 1 \u2014 Route the Supervisor"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/homework.md",
+      "title": "Week 23 Homework"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/lecture-notes/01-supervisor-graph-and-mcp-surface.md",
+      "title": "Lecture 1 \u2014 The Supervisor Graph and the MCP Tool Surface"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/lecture-notes/02-serving-eval-and-tracing.md",
+      "title": "Lecture 2 \u2014 Serving the Two Tiers, the Eval Suite, and OTel Tracing"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/mini-project/README.md",
+      "title": "Mini-Project \u2014 Ship the Production Agentic Research Assistant (Sprint B)"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/quiz.md",
+      "title": "Week 23 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-23-capstone-sprint-b-agents-mcp-eval-serving/resources.md",
+      "title": "Week 23 \u2014 Resources"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/README.md",
+      "title": "Week 24 \u2014 Chaos Drill, Eval-in-Prod, On-Call"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/challenges/README.md",
+      "title": "Week 24 \u2014 Challenges"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/challenges/challenge-01-run-the-chaos-drill.md",
+      "title": "Challenge 1 \u2014 Run the Chaos Drill"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/exercises/README.md",
+      "title": "Week 24 \u2014 Exercises"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/exercises/exercise-01-design-the-drill.md",
+      "title": "Exercise 1 \u2014 Design the Drill"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/homework.md",
+      "title": "Week 24 Homework"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/lecture-notes/01-chaos-drills-for-agentic-systems.md",
+      "title": "Lecture 1 \u2014 Chaos Drills for Agentic Systems"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/lecture-notes/02-eval-in-prod-deploys-and-on-call.md",
+      "title": "Lecture 2 \u2014 Eval-in-Prod, Safe Deploys, and On-Call"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/mini-project/README.md",
+      "title": "Mini-Project \u2014 Capstone Close-Out: Postmortem, Runbook, Video, Career Pack"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/quiz.md",
+      "title": "Week 24 \u2014 Quiz"
+    },
+    {
+      "path": "curriculum/week-24-chaos-drill-eval-in-prod-on-call/resources.md",
+      "title": "Week 24 \u2014 Resources"
+    }
+  ]
+}
